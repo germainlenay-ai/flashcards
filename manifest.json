@@ -1,0 +1,18 @@
+{
+  "name": "FlashCards",
+  "short_name": "FlashCards",
+  "description": "Mes flashcards personnelles",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

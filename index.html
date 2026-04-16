@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FlashCards">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>FlashCards</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== HOME VIEW ========== -->
+<div id="view-home" class="view active">
+  <header class="topbar">
+    <div class="topbar-row">
+      <h1 class="app-name">🃏 FlashCards</h1>
+      <button class="icon-btn" id="btn-new-deck" aria-label="Nouveau jeu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+  <main class="scroll-area">
+    <div id="home-decks"></div>
+    <div id="home-empty" class="empty-state hidden">
+      <div class="empty-icon">📚</div>
+      <p class="empty-title">Aucun jeu de cartes</p>
+      <p class="empty-sub">Crée ton premier jeu pour commencer !</p>
+      <button class="btn-primary mt16" id="btn-new-deck-empty">+ Créer un jeu</button>
+    </div>
+  </main>
+</div>
+
+<!-- ========== DECK VIEW ========== -->
+<div id="view-deck" class="view">
+  <header class="topbar">
+    <div class="topbar-row">
+      <button class="icon-btn" id="btn-back-home" aria-label="Retour">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <h2 class="view-title" id="deck-title"></h2>
+      <button class="icon-btn" id="btn-deck-menu" aria-label="Options">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
+        </svg>
+      </button>
+    </div>
+    <div id="deck-source-label" class="deck-source"></div>
+  </header>
+  <main class="scroll-area with-bar">
+    <div id="deck-cards"></div>
+    <div id="deck-empty" class="empty-state hidden">
+      <div class="empty-icon">✏️</div>
+      <p class="empty-title">Aucune carte</p>
+      <p class="empty-sub">Ajoute ta première carte ci-dessous</p>
+    </div>
+  </main>
+  <div class="bottom-bar">
+    <button class="btn-outline" id="btn-add-card">+ Carte</button>
+    <button class="btn-primary" id="btn-study">▶ Étudier</button>
+  </div>
+</div>
+
+<!-- ========== STUDY VIEW ========== -->
+<div id="view-study" class="view">
+  <header class="topbar">
+    <div class="topbar-row">
+      <button class="icon-btn" id="btn-exit-study" aria-label="Quitter">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <h2 class="view-title" id="study-deck-name"></h2>
+      <span class="study-count" id="study-count"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="study-progress"></div></div>
+  </header>
+  <main class="study-main">
+    <div class="flip-wrap">
+      <div class="flip-card" id="flip-card">
+        <div class="flip-front">
+          <span class="side-label">Recto</span>
+          <div class="card-text" id="study-front"></div>
+          <span class="flip-hint">Appuie pour retourner</span>
+        </div>
+        <div class="flip-back">
+          <span class="side-label">Verso</span>
+          <div class="card-text" id="study-back"></div>
+        </div>
+      </div>
+    </div>
+    <div class="study-btns">
+      <button class="btn-review" id="btn-unknown" disabled>🔄 À revoir</button>
+      <button class="btn-known" id="btn-known" disabled>✓ Je sais !</button>
+    </div>
+  </main>
+</div>
+
+<!-- ========== RESULTS VIEW ========== -->
+<div id="view-results" class="view">
+  <main class="results-main">
+    <div class="results-emoji" id="res-emoji"></div>
+    <h2 class="results-title" id="res-title"></h2>
+    <p class="results-sub" id="res-sub"></p>
+    <div class="results-grid">
+      <div class="result-card green">
+        <span class="result-num" id="res-known">0</span>
+        <span class="result-lbl">Je sais ✓</span>
+      </div>
+      <div class="result-card red">
+        <span class="result-num" id="res-unknown">0</span>
+        <span class="result-lbl">À revoir 🔄</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn-retry">🔄 Recommencer</button>
+    <button class="btn-ghost mt8" id="btn-back-results">← Retour au jeu</button>
+  </main>
+</div>
+
+<!-- ========== OVERLAY ========== -->
+<div id="overlay" class="overlay hidden"></div>
+
+<!-- ========== DECK MODAL ========== -->
+<div id="modal-deck" class="modal hidden">
+  <div class="modal-header">
+    <h3 id="modal-deck-title">Nouveau jeu</h3>
+    <button class="icon-btn" id="btn-close-deck">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label for="inp-deck-name">Nom du jeu *</label>
+      <input type="text" id="inp-deck-name" placeholder="ex: Vocabulaire anglais" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="inp-deck-source">Source (optionnel)</label>
+      <input type="text" id="inp-deck-source" placeholder="ex: Duolingo, Livre p.45, YouTube…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Couleur</label>
+      <div class="color-grid" id="color-grid"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-ghost" id="btn-cancel-deck">Annuler</button>
+    <button class="btn-primary" id="btn-save-deck">Créer</button>
+  </div>
+</div>
+
+<!-- ========== CARD MODAL ========== -->
+<div id="modal-card" class="modal hidden">
+  <div class="modal-header">
+    <h3 id="modal-card-title">Nouvelle carte</h3>
+    <button class="icon-btn" id="btn-close-card">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label for="inp-card-front">Recto — question *</label>
+      <textarea id="inp-card-front" placeholder="Mot, concept, question…" rows="3"></textarea>
+    </div>
+    <div class="field">
+      <label for="inp-card-back">Verso — réponse *</label>
+      <textarea id="inp-card-back" placeholder="Réponse, traduction, définition…" rows="3"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-ghost" id="btn-cancel-card">Annuler</button>
+    <button class="btn-primary" id="btn-save-card">Ajouter</button>
+  </div>
+</div>
+
+<!-- ========== BOTTOM SHEET ========== -->
+<div id="sheet" class="sheet hidden">
+  <div class="sheet-handle"></div>
+  <div id="sheet-content"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
